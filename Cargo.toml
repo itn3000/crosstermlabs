@@ -1,0 +1,18 @@
+[package]
+name = "crosstermlabs"
+version = "0.1.0"
+authors = ["itn3000"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+
+[dependencies]
+crossterm = "0.17"
+tokio = { version = "0.2", features = ["rt-core", "io-std", "io-util", "sync"] }
+futures = "0.3"
+thiserror = "1.0"
+cursive = { version = "0.15", features = ["crossterm"], default-features = false }
+tui = { version = "0.10", features = ["crossterm"], default-features = false }
+scopeguard = "1.1"
