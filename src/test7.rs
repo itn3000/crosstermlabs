@@ -1,10 +1,8 @@
-use tokio::runtime;
 use tokio::io::AsyncReadExt;
 use tokio::sync::mpsc;
 
 use super::ApplicationError;
 use crossterm::event::KeyCode;
-use tui::widgets::ListState;
 
 async fn test7_stdin_worker(mut tx: mpsc::Sender<String>, mut out_end_rx: mpsc::Receiver<bool>, mut endtx: mpsc::Sender<bool>) -> Result<(), ApplicationError> {
     let mut buf = String::new();
@@ -97,8 +95,16 @@ async fn test7_stdout_worker<TermBackend>(mut term: tui::Terminal<TermBackend>, 
                     } else if data.len() > list_size {
                         current_offset = data.len() - list_size
                     }
-                }
-                KeyCode::Char(v) => print!("{}", v),
+                },
+                KeyCode::Backspace | KeyCode::Char('b') => {
+                    if current_offset > list_size {
+                        current_offset -= list_size;
+                    } else {
+                        current_offset = 0;
+                    }
+
+                },
+                KeyCode::Char(_) => (),
                 _ => println!("unknown event"),
             },
             _ => println!("another event"),
