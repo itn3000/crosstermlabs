@@ -5,6 +5,7 @@ extern crate thiserror;
 extern crate tokio;
 extern crate tui;
 extern crate futures;
+extern crate unicode_width;
 
 use std::sync::mpsc;
 
@@ -15,6 +16,7 @@ mod test4;
 mod test5;
 mod test6;
 mod test7;
+mod test8;
 
 #[derive(thiserror::Error, Debug)]
 pub enum ApplicationError {
@@ -38,5 +40,6 @@ fn main() -> Result<(), ApplicationError> {
     // test5()?;
     // test6()?;
     test7::test7()?;
+    // test8::test8();
     Ok(())
 }

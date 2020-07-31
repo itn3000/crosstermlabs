@@ -16,3 +16,4 @@ thiserror = "1.0"
 cursive = { version = "0.15", features = ["crossterm"], default-features = false }
 tui = { version = "0.10", features = ["crossterm"], default-features = false }
 scopeguard = "1.1"
+unicode-width = "0.1"

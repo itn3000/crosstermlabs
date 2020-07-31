@@ -3,6 +3,7 @@ use tokio::sync::mpsc;
 
 use super::ApplicationError;
 use crossterm::event::KeyCode;
+use unicode_width::UnicodeWidthChar;
 
 async fn test7_stdin_worker(mut tx: mpsc::Sender<String>, mut out_end_rx: mpsc::Receiver<bool>, mut endtx: mpsc::Sender<bool>) -> Result<(), ApplicationError> {
     let mut buf = String::new();
@@ -36,7 +37,21 @@ async fn test7_stdout_worker<TermBackend>(mut term: tui::Terminal<TermBackend>, 
         if endrx.try_recv().is_err() {
             loop {
                 if let Some(s) = rx.recv().await {
-                    data.push(s);
+                    let mut slen = 0usize;
+                    let mut sendstr = String::new();
+                    sendstr.reserve(s.len());
+                    for c in s.chars() {
+                        sendstr.push(c);
+                        slen += if let Some(v) = c.width() { v } else { 0 };
+                        if slen >= termsize.width as usize {
+                            data.push(sendstr.clone());
+                            sendstr.clear();
+                            slen = 0;
+                        }
+                    }
+                    if sendstr.len() > 0 {
+                        data.push(sendstr);
+                    }
                 } else {
                     break;
                 }
